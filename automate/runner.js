@@ -12,7 +12,7 @@ puppeteer.use(AnonymizeUAPlugin());
 
 
 
-async function runScript( 
+async function runScript({ 
     username,
     password,
     city,
@@ -25,7 +25,7 @@ async function runScript(
     language,
     pets,
     expectDate,
-    totalPeople){
+    totalPeople}){
 
     const browser = await puppeteer.launch({
         headless: 'new',
@@ -41,8 +41,8 @@ async function runScript(
     let page = await browser.newPage();
     await page.setViewport({ width: 1440, height: 900 });
     await page.goto('https://kamernet.nl/en');
-    page = await login(page, username, password);
-    page = await applyFilters(page, city, radius);
+    page = await methods.login(page, username, password);
+    page = await methods.applyFilters(page, city, radius);
     page = await methods.visitListings(
       page,
       username,

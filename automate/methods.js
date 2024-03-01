@@ -249,8 +249,6 @@ async function selectExpectDate(page, expectDate) {
     month = (month - 1).toString().replace('0', '').trim();
     day = day.toString().replace('0', '').trim();
 
-    console.log(day, month, year);
-
     await page.waitForXPath("//input[@id='ExpectedMoveInDate']");
     const [dateButton] = await page.$x("//input[@id='ExpectedMoveInDate']");
     await dateButton.evaluate(dateButton => dateButton.click());

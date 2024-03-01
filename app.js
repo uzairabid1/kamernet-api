@@ -11,7 +11,6 @@ app.use(bodyParser.json());
 app.post('/react', async (req, res) => {
   try {
     const { username, password, city, radius, message, gender, dob, stay, occupation, language, pets, expectDate, totalPeople } = req.body;
-
     await runScript({ username, password, city, radius, message, gender, dob, stay, occupation, language, pets, expectDate, totalPeople });
 
     res.json({ message: 'Scraping completed successfully' });
