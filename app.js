@@ -8,7 +8,7 @@ const port = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.post('/scrape', async (req, res) => {
+app.post('/react', async (req, res) => {
   try {
     const { username, password, city, radius, message, gender, dob, stay, occupation, language, pets, expectDate, totalPeople } = req.body;
 
