@@ -44,6 +44,7 @@ async function runScript({
     page = await methods.login(page, username, password);
     page = await methods.applyFilters(page, city, radius);
     page = await methods.visitListings(
+      browser,
       page,
       username,
       message,

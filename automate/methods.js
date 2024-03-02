@@ -55,7 +55,7 @@ async function applyFilters(page, city, radius) {
     return page;
 }
 
-async function getListings(page, username) {
+async function getListings(browser, page, username) {
 
     await dbUtil.setupDatabase();
 
@@ -87,15 +87,26 @@ async function getListings(page, username) {
     // Close the database connection
     db.close();
 
+    if(newListings.length < 1){
+        console.log('no new listings');
+    }
+
     console.log(newListings);
     return newListings;
 }
 
 
-async function visitListings(page, username, message, gender, dob, stay, occupation, language, pets, expectDate, totalPeople) {
+async function visitListings(browser, page, username, message, gender, dob, stay, occupation, language, pets, expectDate, totalPeople) {
 
     //visit listings
-    let listings = await getListings(page, username);
+    let listings = await getListings(browser, page, username);
+
+    if(listings == []){
+        console.log('closing the browser');
+        await browser.close();
+        return page;
+    }
+
     for (let listing of listings) {
         await page.goto(listing);
         await delay(2000);
