@@ -10,10 +10,13 @@ async function login(page, username, password) {
 
     try {
         await delay(2000);
-        await page.waitForXPath("//button[.='Accept all']");
-        const [cookieButton] = await page.$x("//button[.='Accept all']");
-        await cookieButton.evaluate(cookieButton => cookieButton.click());
-        console.log('Cookie accepted')
+        try{
+            const [cookieButton] = await page.$x("//button[.='Accept all']");
+            await cookieButton.evaluate(cookieButton => cookieButton.click());
+            console.log('Cookie accepted');
+        }catch(err){
+            console.log('No cookies found')
+        }
         //click on login button
         await page.waitForXPath("//a[.='Log in']");
         const [loginButton] = await page.$x("//a[.='Log in']");
