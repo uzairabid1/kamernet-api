@@ -62,25 +62,33 @@ async function applyFilters(page, city, radius) {
     return page;
 }
 
-async function getListings(browser, page, username) {
+async function getListings(page, username) {
 
     await dbUtil.setupDatabase();
 
-    // Open a SQLite database (create it if not exists)
     const db = new sqlite3.Database('listings.db');
-
-    // Create a table if it doesn't exist
     db.run('CREATE TABLE IF NOT EXISTS listings (username TEXT, url TEXT PRIMARY KEY)');
 
     // Getting new listing URLs
     let newListings = [];
-
-    await page.waitForSelector("a.ListingCard_root__xVYYt");
-    let listingsElements = await page.$$("a.ListingCard_root__xVYYt");
+    let listingsElements = [];
+    let newCheck = false;
+    try{
+        await page.waitForSelector("a.ListingCard_root__xVYYt");
+        listingsElements = await page.$$("a.ListingCard_root__xVYYt");
+    }catch(r){
+        listingsElements = await page.$$("div.tile-data>a");
+        newCheck = true;
+    }
 
     for (let element of listingsElements) {
         let listingLink = await page.evaluate(element => element.getAttribute('href'), element);
-        let fullUrl = "https://kamernet.nl/" + listingLink;
+        let fullUrl = '';
+        if(newCheck == false){
+            fullUrl = "https://kamernet.nl/" + listingLink;
+        }else{
+            fullUrl = listingLink;
+        }
 
         // Check if the listing is new for the specific user
 
@@ -93,10 +101,6 @@ async function getListings(browser, page, username) {
 
     // Close the database connection
     db.close();
-
-    if(newListings.length < 1){
-        console.log('no new listings');
-    }
 
     console.log(newListings);
     return newListings;
