@@ -62,21 +62,24 @@ async function applyFilters(page, city, radius) {
     return page;
 }
 
-async function getListings(page, username) {
+async function getListings(browser, page, username) {
 
     await dbUtil.setupDatabase();
 
+    // Open a SQLite database (create it if not exists)
     const db = new sqlite3.Database('listings.db');
+
+    // Create a table if it doesn't exist
     db.run('CREATE TABLE IF NOT EXISTS listings (username TEXT, url TEXT PRIMARY KEY)');
 
     // Getting new listing URLs
     let newListings = [];
-    let listingsElements = [];
     let newCheck = false;
+    let listingsElements = [];
     try{
         await page.waitForSelector("a.ListingCard_root__xVYYt");
         listingsElements = await page.$$("a.ListingCard_root__xVYYt");
-    }catch(r){
+    }catch(err){
         listingsElements = await page.$$("div.tile-data>a");
         newCheck = true;
     }
@@ -101,6 +104,10 @@ async function getListings(page, username) {
 
     // Close the database connection
     db.close();
+
+    if(newListings.length < 1){
+        console.log('no new listings');
+    }
 
     console.log(newListings);
     return newListings;
