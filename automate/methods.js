@@ -247,6 +247,16 @@ async function selectLanguages(page, languages) {
     const input = await page.$("div#Languages>div>span>input:nth-child(2)");
     await input.click();
     await page.keyboard.press('Backspace');
+    await delay(300);
+    await input.click();
+    await page.keyboard.press('Backspace');
+    await delay(300);
+    await input.click();
+    await page.keyboard.press('Backspace');
+    await delay(300);
+    await input.click();
+    await page.keyboard.press('Backspace');
+    await delay(300);
 
     for (let language of languages_arr) {
         await page.type("div#Languages>div>span>input:nth-child(2)", `${language}`, { delay: 50 });
@@ -302,9 +312,8 @@ async function selectExpectDate(page, expectDate) {
 async function selectPeopleMovingIn(page, totalPeople) {
     await page.waitForSelector("input#PeopleMovingIn");
     const input = await page.$("input#PeopleMovingIn");
-    await input.click();
-    await page.keyboard.press('Backspace');
-    await delay(500);
+
+    await input.evaluate((input=>input.value=''));
 
     await page.waitForSelector("input#PeopleMovingIn");
     await page.type("input#PeopleMovingIn", `${totalPeople.toString()}`);
